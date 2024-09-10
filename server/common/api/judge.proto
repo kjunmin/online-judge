@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "github.com/kjunmin/server/common/api";
+
+package api;
+
+service ProblemsService {
+    rpc CreateProblem(CreateProblemRequest) returns (Problem);
+    rpc GetProblem(GetProblemRequest) returns (Problem);
+}
+
+message Problem {
+    optional string problemID = 1;
+    string type = 2;
+    string tags = 3;
+    string status = 4;
+    string title = 5;
+    string description = 6;
+}
+
+message GetProblemRequest {
+    string problemID = 1;
+}
+
+message CreateProblemRequest {
+    Problem Problem = 1;
+}
