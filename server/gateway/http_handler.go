@@ -7,6 +7,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/kjunmin/online-judge/server/common"
 	pb "github.com/kjunmin/online-judge/server/common/api"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type handler struct {
@@ -36,7 +38,12 @@ func (h *handler) HandleCreateProblem(w http.ResponseWriter, r *http.Request) {
 	problem, err := h.client.CreateProblem(r.Context(), &pb.CreateProblemRequest{
 		Problem: problem,
 	})
-	if err != nil {
+	rStatus := status.Convert(err)
+	if rStatus != nil {
+		if rStatus.Code() != codes.InvalidArgument {
+			common.WriteErrorToHTTPResponse(w, http.StatusBadRequest, rStatus.Message())
+			return
+		}
 		common.WriteErrorToHTTPResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}

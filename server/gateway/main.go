@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	_ "github.com/joho/godotenv/autoload"
 	"github.com/kjunmin/online-judge/server/common"
 	pb "github.com/kjunmin/online-judge/server/common/api"
 	"google.golang.org/grpc"
@@ -14,11 +13,15 @@ import (
 )
 
 var (
-	httpAddr            = common.EnvString("HTTP_ADDR", ":8080")
-	problemsServiceAddr = "localhost:3000"
+	GRPCPort = "3000"
+	HTTPPort = "8080"
 )
 
 func main() {
+	cfg := common.GetConfig()
+	problemsServiceAddr := fmt.Sprintf(":%s", cfg.GRPCPort)
+	httpAddr := fmt.Sprintf(":%s", cfg.HTTPPort)
+
 	conn, err := grpc.NewClient(problemsServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to dial server: %v", err)

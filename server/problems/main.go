@@ -1,7 +1,7 @@
 package main
 
 import (
-	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -10,11 +10,9 @@ import (
 	"google.golang.org/grpc"
 )
 
-var (
-	grpcAddr = common.EnvString("GRPC_ADDR", "localhost:3000")
-)
-
 func main() {
+	cfg := common.GetConfig()
+	grpcAddr := fmt.Sprintf(":%s", cfg.GRPCPort)
 	grpcServer := grpc.NewServer()
 
 	l, err := net.Listen("tcp", grpcAddr)
@@ -25,9 +23,7 @@ func main() {
 
 	store := NewStore()
 	service := NewService(store)
-	NewGRPCHandler(grpcServer)
-
-	service.CreateProblem(context.Background())
+	NewGRPCHandler(grpcServer, service)
 
 	log.Println("GRPC Server started at ", grpcAddr)
 
