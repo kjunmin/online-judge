@@ -13,14 +13,13 @@ import (
 )
 
 var (
-	GRPCPort = "3000"
-	HTTPPort = "8080"
+	GRPCPort = common.EnvString("GRPC_PORT", "3000")
+	HTTPPort = common.EnvString("HTTP_PORT", "8080")
 )
 
 func main() {
-	cfg := common.GetConfig()
-	problemsServiceAddr := fmt.Sprintf(":%s", cfg.GRPCPort)
-	httpAddr := fmt.Sprintf(":%s", cfg.HTTPPort)
+	problemsServiceAddr := fmt.Sprintf(":%s", GRPCPort)
+	httpAddr := fmt.Sprintf(":%s", HTTPPort)
 
 	conn, err := grpc.NewClient(problemsServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {

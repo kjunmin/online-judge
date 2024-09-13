@@ -4,11 +4,13 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./server/gateway
+    image: kjunmin/online-judge:gateway-service
     ports:
       - '8080:8080'
   problems:
     build: 
       dockerfile: Dockerfile
       context: ./server/problems
+    image: kjunmin/online-judge:problems-service
     ports:
       - '3000:3000'
