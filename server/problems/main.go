@@ -10,9 +10,12 @@ import (
 	"google.golang.org/grpc"
 )
 
+var (
+	GRPCPort = common.EnvString("GRPC_PORT", "8080")
+)
+
 func main() {
-	cfg := common.GetConfig()
-	grpcAddr := fmt.Sprintf(":%s", cfg.GRPCPort)
+	grpcAddr := fmt.Sprintf(":%s", GRPCPort)
 	grpcServer := grpc.NewServer()
 
 	l, err := net.Listen("tcp", grpcAddr)
