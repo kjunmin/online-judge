@@ -18,7 +18,7 @@ var (
 )
 
 func main() {
-	problemsServiceAddr := fmt.Sprintf(":%s", GRPCPort)
+	problemsServiceAddr := fmt.Sprintf("problems-service:%s", GRPCPort)
 	httpAddr := fmt.Sprintf(":%s", HTTPPort)
 
 	conn, err := grpc.NewClient(problemsServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
