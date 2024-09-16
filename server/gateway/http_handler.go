@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -20,7 +21,21 @@ func NewHandler(client pb.ProblemsServiceClient) *handler {
 }
 
 func (h *handler) registerRoutes(mux *mux.Router) {
-	mux.HandleFunc("/create/problem", h.HandleCreateProblem)
+	mux.HandleFunc("/create/problem", h.HandleCreateProblem).Methods("POST")
+	mux.HandleFunc("/problem/{problem_id:[0-9]+}", h.HandleGetProblem).Methods("GET")
+	mux.HandleFunc("/healthcheck", h.HandleHealthCheck).Methods("GET")
+}
+
+func (h *handler) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {
+	common.WriteJSONToHTTPResponse(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (h *handler) HandleGetProblem(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	problemId := vars["problem_id"]
+	log.Printf("Problem id %v", problemId)
+
+	common.WriteJSONToHTTPResponse(w, http.StatusOK, map[string]string{"Problem ID": problemId})
 }
 
 func (h *handler) HandleCreateProblem(w http.ResponseWriter, r *http.Request) {

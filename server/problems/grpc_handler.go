@@ -1,9 +1,6 @@
 package main
 
 import (
-	"context"
-	"log"
-
 	pb "github.com/kjunmin/online-judge/server/common/api"
 	"google.golang.org/grpc"
 )
@@ -19,13 +16,13 @@ func NewGRPCHandler(grpcServer *grpc.Server, service ProblemsService) {
 	pb.RegisterProblemsServiceServer(grpcServer, handler)
 }
 
-func (h *grpcHandler) CreateProblem(ctx context.Context, p *pb.CreateProblemRequest) (*pb.Problem, error) {
-	o := &pb.Problem{}
-	log.Printf("New problem created! Problem %v", p)
-	return o, nil
-}
-func (h *grpcHandler) GetProblem(context.Context, *pb.GetProblemRequest) (*pb.Problem, error) {
-	o := &pb.Problem{}
-	log.Println("Problem retrieved")
-	return o, nil
-}
+// func (h *grpcHandler) CreateProblem(ctx context.Context, p *pb.CreateProblemRequest) (*pb.Problem, error) {
+// 	o := &pb.Problem{}
+// 	log.Printf("New problem created! Problem %v", p)
+// 	return o, nil
+// }
+// func (h *grpcHandler) GetProblem(context.Context, *pb.GetProblemRequest) (*pb.Problem, error) {
+// 	o := &pb.Problem{}
+// 	log.Println("Problem retrieved")
+// 	return o, nil
+// }
