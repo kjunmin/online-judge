@@ -9,6 +9,6 @@ RUN go build -o gateway
 FROM scratch
 
 WORKDIR /
-COPY --from=build gateway /
+COPY --from=build /gateway /
 EXPOSE 8080
 ENTRYPOINT [ "./gateway" ]

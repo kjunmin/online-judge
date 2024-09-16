@@ -23,7 +23,7 @@ func main() {
 
 	conn, err := grpc.NewClient(problemsServiceAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("Failed to dial server: %v", err)
+		log.Fatalf("Failed to dial server: %v. ERR:", problemsServiceAddr, err)
 	}
 	defer conn.Close()
 

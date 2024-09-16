@@ -1,16 +1,22 @@
-version: '3'
 services:
+  webapp:
+    build:
+      dockerfile: Dockerfile
+      context: ./client
+    image: kjunmin/oj-webapp:latest
+    ports:
+      - '3000:3000'
   gateway:
     build:
       dockerfile: Dockerfile
       context: ./server/gateway
-    image: kjunmin/online-judge:gateway-service
+    image: kjunmin/oj-gateway:latest
     ports:
       - '8080:8080'
   problems:
     build: 
       dockerfile: Dockerfile
       context: ./server/problems
-    image: kjunmin/online-judge:problems-service
+    image: kjunmin/oj-problems:latest
     ports:
-      - '3000:3000'
+      - '4000:4000'
