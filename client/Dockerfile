@@ -1,9 +1,16 @@
-FROM node:alpine 
+FROM node:alpine as build
 
-RUN npm install -g npm
-RUN npm install -g vite
+WORKDIR /app
 
+COPY package*.json ./
+RUN npm install
 
-COPY . .
+COPY . . 
+RUN npm run build
 
-WORKDIR /srv/app
+FROM nginx:latest
+
+WORKDIR /
+
+COPY --from=build ./app/dist /usr/share/nginx/html
+EXPOSE 3000
