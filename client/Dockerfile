@@ -1,12 +1,12 @@
-FROM node:alpine as build
+FROM node:alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+COPY package*.json yarn.lock ./
+RUN yarn
 
 COPY . . 
-RUN npm run build
+RUN yarn build
 
 FROM nginx:alpine
 
