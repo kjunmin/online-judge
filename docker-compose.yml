@@ -1,22 +1,73 @@
 services:
+  proxy:
+    build:
+      dockerfile: Dockerfile
+      context: ./reverse-proxy
+    image: kjunmin/oj-reverse-proxy:latest
+    container_name: oj-reverse-proxy
+    restart: always
+    ports:
+      - "80:80"
+  # Frontend
   webapp:
     build:
       dockerfile: Dockerfile
       context: ./client
     image: kjunmin/oj-webapp:latest
+    container_name: oj-webapp
     ports:
       - '3000:3000'
+    develop:
+      watch:
+        - path: ./client/src
+          action: rebuild
+    depends_on:
+      - gateway
+  # BE Services
   gateway:
     build:
       dockerfile: Dockerfile
       context: ./server/gateway
+    container_name: oj-server-gateway
     image: kjunmin/oj-gateway:latest
     ports:
       - '8080:8080'
+    develop:
+      watch:
+        - path: ./server/gateway
+          action: rebuild
   problems:
     build: 
       dockerfile: Dockerfile
       context: ./server/problems
+    container_name: oj-server-problems
     image: kjunmin/oj-problems:latest
     ports:
       - '4000:4000'
+    develop:
+      watch:
+        - path: ./server/problems
+          action: rebuild
+
+  # Database
+  # dynamodb-local:
+  #   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+  #   image: "amazon/dynamodb-local:latest"
+  #   container_name: dynamodb-local
+  #   ports:
+  #     - "8000:8000"
+  #   restart: always
+  #   volumes:
+  #     - "./data:/home/dynamodblocal/data"
+  #   working_dir: /home/dynamodblocal
+  # dynamodb: 
+  #   image: "aaronshaf/dynamodb-admin"
+  #   container_name: dynamodb-admin
+  #   depends_on:
+  #     - dynamodb-local
+  #   restart: always
+  #   ports:
+  #     - "8001:8001"
+  #   environment:
+  #     - DYNAMO_ENDPOINT=http://dynamodb-local:8000
+  #     - AWS_REGION=ap-southeast-1
