@@ -11,11 +11,9 @@ service ProblemsService {
 
 message Problem {
     optional string problemID = 1;
-    string type = 2;
-    string tags = 3;
-    string status = 4;
-    string title = 5;
-    string description = 6;
+    string tags = 2;
+    string title = 3;
+    string description = 4;
 }
 
 message GetProblemRequest {
