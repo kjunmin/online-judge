@@ -21,7 +21,7 @@ func NewHandler(client pb.ProblemsServiceClient) *handler {
 }
 
 func (h *handler) registerRoutes(mux *mux.Router) {
-	mux.HandleFunc("/create/problem", h.HandleCreateProblem).Methods("POST")
+	mux.HandleFunc("/problem/create", h.HandleCreateProblem).Methods("POST")
 	mux.HandleFunc("/problem/{problem_id:[0-9]+}", h.HandleGetProblem).Methods("GET")
 	mux.HandleFunc("/healthcheck", h.HandleHealthCheck).Methods("GET")
 }
