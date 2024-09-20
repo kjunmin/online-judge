@@ -26,8 +26,8 @@ services:
   # BE Services
   gateway:
     build:
-      dockerfile: Dockerfile
-      context: ./server/gateway
+      dockerfile: ./server/gateway/Dockerfile
+      context: ./
     container_name: oj-server-gateway
     image: kjunmin/oj-gateway:latest
     ports:
@@ -38,8 +38,8 @@ services:
           action: rebuild
   problems:
     build: 
-      dockerfile: Dockerfile
-      context: ./server/problems
+      dockerfile: ./server/problems/Dockerfile
+      context: ./
     container_name: oj-server-problems
     image: kjunmin/oj-problems:latest
     ports:
