@@ -5,7 +5,7 @@ import { Problem } from "../types";
 import axios from "axios";
 
 function useCreateProblem() {
-    type CreateProblem = Omit<Problem, 'problemId'>
+    type CreateProblem = Omit<Problem, 'problemID'>
 
     function createProblem(problem: CreateProblem) {
         axios.post('/api/v1/problem/create', problem)

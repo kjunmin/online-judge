@@ -1,5 +1,5 @@
 export type Problem = {
-  problemId: string;
+  problemID: string;
   title: string;
   description: string;
   tags: string[];
