@@ -36,6 +36,15 @@ func (s *service) CreateProblem(ctx context.Context, p *pb.CreateProblemRequest)
 	return err
 }
 
-func (s *service) GetProblem(context.Context, *pb.GetProblemRequest) error {
+func (s *service) GetProblemsList(ctx context.Context, r *pb.GetProblemsListRequest) ([]*pb.ProblemsListItem, error) {
+	problemsList, err := s.store.GetProblemsList(ctx)
+	if err != nil {
+		log.Printf("Error getting problems list in service. Error %v\n", err)
+		return nil, err
+	}
+	return problemsList, nil
+}
+
+func (s *service) GetProblemById(context.Context, *pb.GetProblemByIdRequest) error {
 	return nil
 }

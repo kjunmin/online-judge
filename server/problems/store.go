@@ -113,3 +113,42 @@ func (s *store) AddProblem(ctx context.Context, problem *pb.Problem) error {
 	}
 	return err
 }
+
+func (s *store) GetProblemsList(ctx context.Context) ([]*pb.ProblemsListItem, error) {
+	var problemsList []*pb.ProblemsListItem
+	var problems []*pb.Problem
+	var err error
+	var response *dynamodb.ScanOutput
+
+	scanPaginator := dynamodb.NewScanPaginator(s.DynamoDbClient, &dynamodb.ScanInput{
+		TableName: aws.String(s.TableName),
+	})
+	for scanPaginator.HasMorePages() {
+		response, err = scanPaginator.NextPage(ctx)
+		if err != nil {
+			log.Printf("Unable to scan for problems list")
+			break
+		} else {
+			log.Println(response.Items)
+			err = attributevalue.UnmarshalListOfMaps(response.Items, &problems)
+			if err != nil {
+				log.Printf("Unable to unmarshal query response. Error: %v", err)
+				break
+			}
+		}
+	}
+
+	for _, problem := range problems {
+		problemsListItem := &pb.ProblemsListItem{
+			ProblemID: *problem.ProblemID,
+			Title:     problem.Title,
+			Tags:      problem.Tags,
+		}
+		problemsList = append(problemsList, problemsListItem)
+	}
+	return problemsList, err
+}
+
+func (s *store) GetProblemById(ctx context.Context, problemID string) error {
+	return nil
+}

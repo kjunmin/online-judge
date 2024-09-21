@@ -11,9 +11,12 @@ type ProblemsStore interface {
 	CreateProblemsTable(context.Context) (*types.TableDescription, error)
 	TableExists(context.Context) (bool, error)
 	AddProblem(context.Context, *pb.Problem) error
+	GetProblemsList(context.Context) ([]*pb.ProblemsListItem, error)
+	GetProblemById(context.Context, string) error
 }
 
 type ProblemsService interface {
 	CreateProblem(context.Context, *pb.CreateProblemRequest) error
-	GetProblem(context.Context, *pb.GetProblemRequest) error
+	GetProblemsList(context.Context, *pb.GetProblemsListRequest) ([]*pb.ProblemsListItem, error)
+	GetProblemById(context.Context, *pb.GetProblemByIdRequest) error
 }
