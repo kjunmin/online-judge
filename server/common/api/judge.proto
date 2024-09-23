@@ -6,18 +6,32 @@ package api;
 
 service ProblemsService {
     rpc CreateProblem(CreateProblemRequest) returns (Problem);
-    rpc GetProblem(GetProblemRequest) returns (Problem);
+    rpc GetProblemsList(GetProblemsListRequest) returns (GetProblemsListResponse);
+    rpc GetProblemById(GetProblemByIdRequest) returns (Problem);
+}
+
+message ProblemsListItem {
+    string problemID = 1;
+    string title = 2;
+    repeated string tags = 3;
 }
 
 message Problem {
     optional string problemID = 1;
-    string tags = 2;
+    repeated string tags = 2;
     string title = 3;
     string description = 4;
 }
 
-message GetProblemRequest {
-    string problemID = 1;
+message GetProblemByIdRequest {
+    string problemId = 1;
+}
+
+message GetProblemsListRequest {
+}
+
+message GetProblemsListResponse {
+    repeated ProblemsListItem problemsList= 1;
 }
 
 message CreateProblemRequest {

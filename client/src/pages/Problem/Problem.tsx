@@ -2,13 +2,9 @@ import { useParams } from "react-router-dom"
 import { isNil } from 'lodash'
 import { ProblemDescription } from "./ProblemDescription"
 
-
-
 type ProblemParams = {
     problemId: string
 }
-
-
 
 export function Problem() {
     const { problemId } = useParams<ProblemParams>()

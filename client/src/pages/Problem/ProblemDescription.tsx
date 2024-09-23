@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 type Problem = {
-    problemId: string;
+    problemID: string;
     title: string;
     description: string; 
     tags: string[];

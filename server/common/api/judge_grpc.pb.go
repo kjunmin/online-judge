@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.28.0
-// source: api/judge.proto
+// source: common/api/judge.proto
 
 package api
 
@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ProblemsService_CreateProblem_FullMethodName = "/api.ProblemsService/CreateProblem"
-	ProblemsService_GetProblem_FullMethodName    = "/api.ProblemsService/GetProblem"
+	ProblemsService_CreateProblem_FullMethodName   = "/api.ProblemsService/CreateProblem"
+	ProblemsService_GetProblemsList_FullMethodName = "/api.ProblemsService/GetProblemsList"
+	ProblemsService_GetProblemById_FullMethodName  = "/api.ProblemsService/GetProblemById"
 )
 
 // ProblemsServiceClient is the client API for ProblemsService service.
@@ -28,7 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ProblemsServiceClient interface {
 	CreateProblem(ctx context.Context, in *CreateProblemRequest, opts ...grpc.CallOption) (*Problem, error)
-	GetProblem(ctx context.Context, in *GetProblemRequest, opts ...grpc.CallOption) (*Problem, error)
+	GetProblemsList(ctx context.Context, in *GetProblemsListRequest, opts ...grpc.CallOption) (*GetProblemsListResponse, error)
+	GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*Problem, error)
 }
 
 type problemsServiceClient struct {
@@ -49,10 +51,20 @@ func (c *problemsServiceClient) CreateProblem(ctx context.Context, in *CreatePro
 	return out, nil
 }
 
-func (c *problemsServiceClient) GetProblem(ctx context.Context, in *GetProblemRequest, opts ...grpc.CallOption) (*Problem, error) {
+func (c *problemsServiceClient) GetProblemsList(ctx context.Context, in *GetProblemsListRequest, opts ...grpc.CallOption) (*GetProblemsListResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProblemsListResponse)
+	err := c.cc.Invoke(ctx, ProblemsService_GetProblemsList_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *problemsServiceClient) GetProblemById(ctx context.Context, in *GetProblemByIdRequest, opts ...grpc.CallOption) (*Problem, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Problem)
-	err := c.cc.Invoke(ctx, ProblemsService_GetProblem_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ProblemsService_GetProblemById_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +76,8 @@ func (c *problemsServiceClient) GetProblem(ctx context.Context, in *GetProblemRe
 // for forward compatibility.
 type ProblemsServiceServer interface {
 	CreateProblem(context.Context, *CreateProblemRequest) (*Problem, error)
-	GetProblem(context.Context, *GetProblemRequest) (*Problem, error)
+	GetProblemsList(context.Context, *GetProblemsListRequest) (*GetProblemsListResponse, error)
+	GetProblemById(context.Context, *GetProblemByIdRequest) (*Problem, error)
 	mustEmbedUnimplementedProblemsServiceServer()
 }
 
@@ -78,8 +91,11 @@ type UnimplementedProblemsServiceServer struct{}
 func (UnimplementedProblemsServiceServer) CreateProblem(context.Context, *CreateProblemRequest) (*Problem, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateProblem not implemented")
 }
-func (UnimplementedProblemsServiceServer) GetProblem(context.Context, *GetProblemRequest) (*Problem, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetProblem not implemented")
+func (UnimplementedProblemsServiceServer) GetProblemsList(context.Context, *GetProblemsListRequest) (*GetProblemsListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProblemsList not implemented")
+}
+func (UnimplementedProblemsServiceServer) GetProblemById(context.Context, *GetProblemByIdRequest) (*Problem, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetProblemById not implemented")
 }
 func (UnimplementedProblemsServiceServer) mustEmbedUnimplementedProblemsServiceServer() {}
 func (UnimplementedProblemsServiceServer) testEmbeddedByValue()                         {}
@@ -120,20 +136,38 @@ func _ProblemsService_CreateProblem_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ProblemsService_GetProblem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetProblemRequest)
+func _ProblemsService_GetProblemsList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProblemsListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ProblemsServiceServer).GetProblem(ctx, in)
+		return srv.(ProblemsServiceServer).GetProblemsList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ProblemsService_GetProblem_FullMethodName,
+		FullMethod: ProblemsService_GetProblemsList_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ProblemsServiceServer).GetProblem(ctx, req.(*GetProblemRequest))
+		return srv.(ProblemsServiceServer).GetProblemsList(ctx, req.(*GetProblemsListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ProblemsService_GetProblemById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProblemByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProblemsServiceServer).GetProblemById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ProblemsService_GetProblemById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProblemsServiceServer).GetProblemById(ctx, req.(*GetProblemByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -150,10 +184,14 @@ var ProblemsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ProblemsService_CreateProblem_Handler,
 		},
 		{
-			MethodName: "GetProblem",
-			Handler:    _ProblemsService_GetProblem_Handler,
+			MethodName: "GetProblemsList",
+			Handler:    _ProblemsService_GetProblemsList_Handler,
+		},
+		{
+			MethodName: "GetProblemById",
+			Handler:    _ProblemsService_GetProblemById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/judge.proto",
+	Metadata: "common/api/judge.proto",
 }

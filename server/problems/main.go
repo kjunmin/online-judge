@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	GRPCPort = common.EnvString("GRPC_PORT", "8080")
+	GRPCPort = common.EnvString("GRPC_PORT", "4000")
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	}
 	defer l.Close()
 
-	store := NewStore()
+	store := NewStore("Problems")
 	service := NewService(store)
 	NewGRPCHandler(grpcServer, service)
 

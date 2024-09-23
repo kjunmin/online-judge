@@ -1,8 +1,6 @@
-build: 
-	@go build -o bin/judgeservice main.go
-
+gen:
+	@protoc --go_out=. --go_opt=paths=source_relative \
+	--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+	common/api/judge.proto
 test:
 	@go test -v ./...
-
-run: build
-	@./bin/judgeservice

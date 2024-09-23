@@ -21,13 +21,28 @@ func NewHandler(client pb.ProblemsServiceClient) *handler {
 }
 
 func (h *handler) registerRoutes(mux *mux.Router) {
-	mux.HandleFunc("/create/problem", h.HandleCreateProblem).Methods("POST")
+	mux.HandleFunc("/problemslist", h.HandleGetProblemsList).Methods("GET")
+	mux.HandleFunc("/problem/create", h.HandleCreateProblem).Methods("POST")
 	mux.HandleFunc("/problem/{problem_id:[0-9]+}", h.HandleGetProblem).Methods("GET")
 	mux.HandleFunc("/healthcheck", h.HandleHealthCheck).Methods("GET")
 }
 
 func (h *handler) HandleHealthCheck(w http.ResponseWriter, r *http.Request) {
 	common.WriteJSONToHTTPResponse(w, http.StatusOK, map[string]string{"status": "ok"})
+}
+
+func (h *handler) HandleGetProblemsList(w http.ResponseWriter, r *http.Request) {
+	problemsListResp, err := h.client.GetProblemsList(r.Context(), &pb.GetProblemsListRequest{})
+	rStatus := status.Convert(err)
+	if rStatus != nil {
+		if rStatus.Code() != codes.InvalidArgument {
+			common.WriteErrorToHTTPResponse(w, http.StatusBadRequest, rStatus.Message())
+			return
+		}
+		common.WriteErrorToHTTPResponse(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	common.WriteJSONToHTTPResponse(w, http.StatusOK, problemsListResp.ProblemsList)
 }
 
 func (h *handler) HandleGetProblem(w http.ResponseWriter, r *http.Request) {
