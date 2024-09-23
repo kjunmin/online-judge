@@ -1,8 +1,9 @@
-import { Button, TagsInput, TextInput } from "@mantine/core";
+import { Button, Input, TagsInput, TextInput } from "@mantine/core";
 import styles from './CreateProblem.module.css'
 import { useForm } from "@mantine/form";
 import { Problem } from "../types";
 import axios from "axios";
+import { TextEditor } from "@/components/TextEditor/TextEditor";
 
 function useCreateProblem() {
     type CreateProblem = Omit<Problem, 'problemID'>
@@ -41,12 +42,15 @@ export function CreateProblem() {
                     placeholder="Remove Nth Node from end of list"
                     {...form.getInputProps('title')}
                 />
-                <TextInput
+                <Input.Wrapper
                     required
-                    key={form.key('description')}
                     label="Description"
-                    {...form.getInputProps('description')}
-                />
+                >
+                    <TextEditor
+                        key={form.key('description')}
+                        {...form.getInputProps('description')}
+                    />
+                </Input.Wrapper>
                 <TagsInput
                     key={form.key('tags')}
                     label="Tags"
