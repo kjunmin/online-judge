@@ -12,7 +12,7 @@ services:
   webapp:
     build:
       dockerfile: Dockerfile
-      context: ./client
+      context: ./client3
     image: kjunmin/oj-webapp:latest
     container_name: oj-webapp
     ports:
